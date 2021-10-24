@@ -1,0 +1,346 @@
+<?xml version='1.0'?>
+<VOTABLE version="1.4"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.3">
+<!--
+ !  VOTable written by STIL version 4.0-2 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2021-10-22T11:58:03
+ !-->
+<RESOURCE>
+<TABLE name="result_S1634900208152" nrows="10">
+<PARAM arraysize="2" datatype="char" name="QUERY_STATUS" value="OK"/>
+<PARAM arraysize="3" datatype="char" name="PROVIDER" value="CDS">
+<DESCRIPTION>TAPVizieR</DESCRIPTION>
+</PARAM>
+<PARAM arraysize="226" datatype="char" name="QUERY" value="SELECT    TOP 1000    tc.*,    gmag, imag, rmag, umag    FROM &quot;V/147/sdss12&quot; AS db    JOIN TAP_UPLOAD.t15 AS tc    ON 1=CONTAINS(POINT('ICRS', db.RA_ICRS, db.DE_ICRS),                  CIRCLE('ICRS', tc.ra, tc.dec, 1.2/3600.))"/>
+<FIELD arraysize="*" datatype="char" name="source" ucd="meta.id;meta.main"/>
+<FIELD datatype="float" name="ra" ucd="pos.eq.ra;meta.main" unit="deg"/>
+<FIELD datatype="float" name="dec" ucd="pos.eq.dec;meta.main" unit="deg"/>
+<FIELD datatype="float" name="e_ra" ucd="pos.eq.ra;stat.error" unit="arcsec"/>
+<FIELD datatype="float" name="e_dec" ucd="pos.eq.dec;stat.error" unit="arcsec"/>
+<FIELD datatype="float" name="tot_flux" unit="mJy"/>
+<FIELD datatype="float" name="e_tot_flux" unit="mJy"/>
+<FIELD datatype="float" name="peak_flux" unit="mJy/beam"/>
+<FIELD datatype="float" name="e_peak_flux" unit="mJy/beam"/>
+<FIELD datatype="float" name="maj_axis" unit="arcsec"/>
+<FIELD datatype="float" name="e_maj" unit="arcsec"/>
+<FIELD datatype="float" name="min_axis" unit="arcsec"/>
+<FIELD datatype="float" name="e_min" unit="arcsec"/>
+<FIELD datatype="float" name="pa" unit="deg"/>
+<FIELD datatype="float" name="e_pa" unit="deg"/>
+<FIELD datatype="float" name="dc_maj" unit="arcsec"/>
+<FIELD datatype="float" name="e_dc_maj" unit="arcsec"/>
+<FIELD datatype="float" name="dc_min" unit="arcsec"/>
+<FIELD datatype="float" name="e_dc_min" unit="arcsec"/>
+<FIELD datatype="float" name="dc_pa" unit="deg"/>
+<FIELD datatype="float" name="e_dc_pa" unit="deg"/>
+<FIELD datatype="float" name="isl_rms" unit="mJy/beam"/>
+<FIELD arraysize="*" datatype="char" name="s_code" ucd="meta.code"/>
+<FIELD datatype="float" name="gmag" ucd="phot.mag;em.opt.B" unit="mag">
+<DESCRIPTION>[5/40]? Model magnitude in g filter, AB scale (g) (5)</DESCRIPTION>
+</FIELD>
+<FIELD datatype="float" name="imag" ucd="phot.mag;em.opt.I" unit="mag">
+<DESCRIPTION>[3/40]? Model magnitude in i filter, AB scale (i) (5)</DESCRIPTION>
+</FIELD>
+<FIELD datatype="float" name="rmag" ucd="phot.mag;em.opt.R" unit="mag">
+<DESCRIPTION>[4/39]? Model magnitude in r filter, AB scale (r) (5)</DESCRIPTION>
+</FIELD>
+<FIELD datatype="float" name="umag" ucd="phot.mag;em.opt.U" unit="mag">
+<DESCRIPTION>[4/38]? Model magnitude in u filter, AB scale (u) (5)</DESCRIPTION>
+</FIELD>
+<DATA>
+<TABLEDATA>
+  <TR>
+    <TD>LOLpJ132354.7+554342</TD>
+    <TD>200.978</TD>
+    <TD>55.7283</TD>
+    <TD>1.43893</TD>
+    <TD>1.33541</TD>
+    <TD>94.5253</TD>
+    <TD>8.77456</TD>
+    <TD>68.8805</TD>
+    <TD>4.07807</TD>
+    <TD>56.2693</TD>
+    <TD>3.39207</TD>
+    <TD>54.0166</TD>
+    <TD>3.14087</TD>
+    <TD>84.2354</TD>
+    <TD>58.5827</TD>
+    <TD>30.8898</TD>
+    <TD>3.39207</TD>
+    <TD>26.4597</TD>
+    <TD>3.14087</TD>
+    <TD>84.2354</TD>
+    <TD>58.5827</TD>
+    <TD>3.84021</TD>
+    <TD>S</TD>
+    <TD>19.955</TD>
+    <TD>17.872</TD>
+    <TD>18.423</TD>
+    <TD>21.912</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ132437.2+553508</TD>
+    <TD>201.155</TD>
+    <TD>55.5855</TD>
+    <TD>1.43655</TD>
+    <TD>1.6599</TD>
+    <TD>73.7929</TD>
+    <TD>8.4529</TD>
+    <TD>62.1106</TD>
+    <TD>4.32945</TD>
+    <TD>55.4776</TD>
+    <TD>4.15292</TD>
+    <TD>47.4272</TD>
+    <TD>3.0784</TD>
+    <TD>150.103</TD>
+    <TD>20.0223</TD>
+    <TD>29.351</TD>
+    <TD>4.15292</TD>
+    <TD>6.03394</TD>
+    <TD>3.0784</TD>
+    <TD>150.103</TD>
+    <TD>20.0223</TD>
+    <TD>4.18892</TD>
+    <TD>S</TD>
+    <TD>22.966</TD>
+    <TD>20.665</TD>
+    <TD>21.715</TD>
+    <TD>24.152</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ132437.2+553508</TD>
+    <TD>201.155</TD>
+    <TD>55.5855</TD>
+    <TD>1.43655</TD>
+    <TD>1.6599</TD>
+    <TD>73.7929</TD>
+    <TD>8.4529</TD>
+    <TD>62.1106</TD>
+    <TD>4.32945</TD>
+    <TD>55.4776</TD>
+    <TD>4.15292</TD>
+    <TD>47.4272</TD>
+    <TD>3.0784</TD>
+    <TD>150.103</TD>
+    <TD>20.0223</TD>
+    <TD>29.351</TD>
+    <TD>4.15292</TD>
+    <TD>6.03394</TD>
+    <TD>3.0784</TD>
+    <TD>150.103</TD>
+    <TD>20.0223</TD>
+    <TD>4.18892</TD>
+    <TD>S</TD>
+    <TD>24.671</TD>
+    <TD>21.34</TD>
+    <TD>21.759</TD>
+    <TD>25.742</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ132309.9+554528</TD>
+    <TD>200.791</TD>
+    <TD>55.7577</TD>
+    <TD>2.69968</TD>
+    <TD>2.70707</TD>
+    <TD>49.3963</TD>
+    <TD>8.62635</TD>
+    <TD>34.5316</TD>
+    <TD>3.89263</TD>
+    <TD>58.0833</TD>
+    <TD>6.71528</TD>
+    <TD>54.5483</TD>
+    <TD>5.99542</TD>
+    <TD>44.7404</TD>
+    <TD>75.4706</TD>
+    <TD>34.0421</TD>
+    <TD>6.71528</TD>
+    <TD>27.5773</TD>
+    <TD>5.99542</TD>
+    <TD>44.7404</TD>
+    <TD>75.4706</TD>
+    <TD>3.64809</TD>
+    <TD>S</TD>
+    <TD>23.391</TD>
+    <TD>22.085</TD>
+    <TD>23.348</TD>
+    <TD>23.823</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ132225.1+554135</TD>
+    <TD>200.605</TD>
+    <TD>55.6932</TD>
+    <TD>3.41909</TD>
+    <TD>4.94491</TD>
+    <TD>26.4432</TD>
+    <TD>7.90938</TD>
+    <TD>21.9727</TD>
+    <TD>3.98969</TD>
+    <TD>59.234</TD>
+    <TD>12.1788</TD>
+    <TD>44.9977</TD>
+    <TD>7.21551</TD>
+    <TD>158.539</TD>
+    <TD>30.7406</TD>
+    <TD>35.9433</TD>
+    <TD>12.1788</TD>
+    <TD>0.0</TD>
+    <TD>7.21551</TD>
+    <TD>158.539</TD>
+    <TD>30.7406</TD>
+    <TD>3.88743</TD>
+    <TD>S</TD>
+    <TD>22.566</TD>
+    <TD>22.62</TD>
+    <TD>23.048</TD>
+    <TD>23.27</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ131728.4+553944</TD>
+    <TD>199.368</TD>
+    <TD>55.6623</TD>
+    <TD>1.10156</TD>
+    <TD>1.06384</TD>
+    <TD>104.263</TD>
+    <TD>8.19591</TD>
+    <TD>84.0839</TD>
+    <TD>4.08863</TD>
+    <TD>53.0899</TD>
+    <TD>2.61383</TD>
+    <TD>51.7324</TD>
+    <TD>2.48443</TD>
+    <TD>111.695</TD>
+    <TD>72.5819</TD>
+    <TD>24.6247</TD>
+    <TD>2.61383</TD>
+    <TD>21.4141</TD>
+    <TD>2.48443</TD>
+    <TD>111.695</TD>
+    <TD>72.5819</TD>
+    <TD>3.9088</TD>
+    <TD>S</TD>
+    <TD>20.373</TD>
+    <TD>18.496</TD>
+    <TD>18.98</TD>
+    <TD>23.64</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ131728.4+553944</TD>
+    <TD>199.368</TD>
+    <TD>55.6623</TD>
+    <TD>1.10156</TD>
+    <TD>1.06384</TD>
+    <TD>104.263</TD>
+    <TD>8.19591</TD>
+    <TD>84.0839</TD>
+    <TD>4.08863</TD>
+    <TD>53.0899</TD>
+    <TD>2.61383</TD>
+    <TD>51.7324</TD>
+    <TD>2.48443</TD>
+    <TD>111.695</TD>
+    <TD>72.5819</TD>
+    <TD>24.6247</TD>
+    <TD>2.61383</TD>
+    <TD>21.4141</TD>
+    <TD>2.48443</TD>
+    <TD>111.695</TD>
+    <TD>72.5819</TD>
+    <TD>3.9088</TD>
+    <TD>S</TD>
+    <TD>20.48</TD>
+    <TD>18.508</TD>
+    <TD>18.984</TD>
+    <TD>22.231</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ131511.0+550803</TD>
+    <TD>198.796</TD>
+    <TD>55.1343</TD>
+    <TD>3.67923</TD>
+    <TD>5.21625</TD>
+    <TD>68.7193</TD>
+    <TD>14.2863</TD>
+    <TD>33.4592</TD>
+    <TD>4.92371</TD>
+    <TD>79.3023</TD>
+    <TD>12.978</TD>
+    <TD>57.3453</TD>
+    <TD>7.58801</TD>
+    <TD>21.8411</TD>
+    <TD>20.9842</TD>
+    <TD>63.8158</TD>
+    <TD>12.978</TD>
+    <TD>32.8091</TD>
+    <TD>7.58801</TD>
+    <TD>21.8411</TD>
+    <TD>20.9842</TD>
+    <TD>4.60174</TD>
+    <TD>S</TD>
+    <TD>24.53</TD>
+    <TD>22.226</TD>
+    <TD>22.93</TD>
+    <TD>24.923</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ131455.3+545751</TD>
+    <TD>198.73</TD>
+    <TD>54.9642</TD>
+    <TD>1.74046</TD>
+    <TD>1.16445</TD>
+    <TD>167.428</TD>
+    <TD>15.0441</TD>
+    <TD>113.63</TD>
+    <TD>6.61215</TD>
+    <TD>64.5728</TD>
+    <TD>4.1543</TD>
+    <TD>50.5198</TD>
+    <TD>2.65895</TD>
+    <TD>100.321</TD>
+    <TD>9.38854</TD>
+    <TD>44.2416</TD>
+    <TD>4.1543</TD>
+    <TD>18.3462</TD>
+    <TD>2.65895</TD>
+    <TD>100.321</TD>
+    <TD>9.38854</TD>
+    <TD>6.23965</TD>
+    <TD>S</TD>
+    <TD>20.14</TD>
+    <TD>17.737</TD>
+    <TD>18.353</TD>
+    <TD>25.824</TD>
+  </TR>
+  <TR>
+    <TD>LOLpJ131455.3+545751</TD>
+    <TD>198.73</TD>
+    <TD>54.9642</TD>
+    <TD>1.74046</TD>
+    <TD>1.16445</TD>
+    <TD>167.428</TD>
+    <TD>15.0441</TD>
+    <TD>113.63</TD>
+    <TD>6.61215</TD>
+    <TD>64.5728</TD>
+    <TD>4.1543</TD>
+    <TD>50.5198</TD>
+    <TD>2.65895</TD>
+    <TD>100.321</TD>
+    <TD>9.38854</TD>
+    <TD>44.2416</TD>
+    <TD>4.1543</TD>
+    <TD>18.3462</TD>
+    <TD>2.65895</TD>
+    <TD>100.321</TD>
+    <TD>9.38854</TD>
+    <TD>6.23965</TD>
+    <TD>S</TD>
+    <TD>20.399</TD>
+    <TD>18.315</TD>
+    <TD>18.931</TD>
+    <TD>23.41</TD>
+  </TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>

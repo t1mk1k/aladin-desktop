@@ -1,0 +1,139 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+# -----------------------------------------------------
+# Run the ivoa-desktop container.
+#[user@desktop]
+
+    source "${HOME:?}/oligia.env"
+    source "${HOME:?}/taenaris.env"
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --env 'TZ=Europe/London' \
+        --publish 3000:3000 \
+        --volume "${OLIGIA_CODE:?}:/oligia:rw,z" \
+        --volume "${TAENARIS_CODE:?}:/taenaris:rw,z" \
+        ghcr.io/linuxserver/webtop:ubuntu-mate
+
+
+    firefox --new-window 'http://localhost:3000/'
+
+        Run a terminal in the new desktop.
+
+
+# -----------------------------------------------------
+# Run the installer
+#[user@container]
+
+    /oligia/src/bin/install.sh
+
+
+
+# -----------------------------------------------------
+# Run the example ..
+#[user@container]
+
+    start topcat
+    start aladin
+
+    cd /taenaris/pysrc/all_together
+    python3 astron_samp_handler.py
+
+    >   Traceback (most recent call last):
+    >     File "astron_samp_handler.py", line 128, in <module>
+    >       main()
+    >     File "astron_samp_handler.py", line 80, in main
+    >       if not sys.warnoptions:
+    >   NameError: name 'sys' is not defined
+
+    >   
+    >   Traceback (most recent call last):
+    >     File "astron_samp_handler.py", line 129, in <module>
+    >       main()
+    >     File "astron_samp_handler.py", line 82, in main
+    >       warnings.simplefilter("ignore")
+    >   NameError: name 'warnings' is not defined
+
+    >   To stop, enter (s):
+
+
+    cd /taenaris/pysrc/all_together
+    python3 sed_samp_handler.py
+
+    >   Traceback (most recent call last):
+    >     File "sed_samp_handler.py", line 131, in <module>
+    >       main()
+    >     File "sed_samp_handler.py", line 78, in main
+    >       warnings.simplefilter("ignore")
+    >   NameError: name 'warnings' is not defined
+
+    >   -
+
+
+    sudo apt install -y python3-matplotlib
+
+
+
+
+    in topcat: load the object list (attached)
+    [File]
+        [Load table]
+            [/taenaris/pysrc/objects.vot]
+
+    Click on "Interop" -> "Send table to" -> PyVO:SED
+
+    >   Downloading http://127.0.0.1:2525/dynamic/1/t1.vot [Done]
+
+
+    Then click on "Views" -> "Activation Actions"
+
+    Check "Send row index" and then use the Table data window in topcat to click on a row, which will start the plot.
+    -- Test by invoking on row [n]
+    -- If no response, then check if table was sent ?
+    -- Needs debug to show what is happening
+    If you then click on different rows, the plot should change.
+
+
+    So perform a cutout, mark the row in topcat (you see the according plot),
+    then in the activation actions window click on "Send SkyCoordinates"
+    (Click on it, don't check it!), and then Click the button
+
+    left of "Invoke now on row X".
+    This will perform the cutout with datalink and SODA and send the image to Aladin.
+    -- Needs debug to show what is happening
+    -- Needs astron-samp-handler running
+
+
+    In Aladin you can see the image come in.
+
+
+
+

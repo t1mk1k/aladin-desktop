@@ -1,0 +1,321 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Rufous Minor Oligia versicolor
+    https://ukmoths.org.uk/species/oligia-versicolor
+
+
+    Install instructions
+    https://pretalx.adass2021.ac.za/media/adass-xxxi-2021/submissions/9HLJ3D/resources/requirements_zVh8d6y.pdf
+
+
+
+
+
+        http://www.star.bris.ac.uk/~mbt/topcat
+
+        https://aladin.u-strasbg.fr/
+
+
+# -----------------------------------------------------
+# Create our the local settings.
+#[user@desktop]
+
+    cat > "${HOME:?}/oligia.env" << 'EOF'
+source "${HOME:?}/projects.env"
+OLIGIA_REPO='git@github.com:Zarquan/oligia.git'
+OLIGIA_HOME="${PROJECTS_ROOT:?}/ESCAPE/oligia"
+OLIGIA_CODE="${OLIGIA_HOME:?}/github-zrq"
+EOF
+
+
+    cat > "${HOME:?}/taenaris.env" << 'EOF'
+source "${HOME:?}/projects.env"
+TAENARIS_REPO='git@github.com:hendhd/taenaris.git'
+TAENARIS_HOME="${PROJECTS_ROOT:?}/ESCAPE/teaching/taenaris"
+TAENARIS_CODE="${TAENARIS_HOME:?}/github-hen"
+EOF
+
+
+
+
+
+# -----------------------------------------------------
+# Create our local directories.
+#[user@desktop]
+
+    source "${HOME:?}/oligia.env"
+
+    if [ ! -e "${OLIGIA_CODE:?}" ]
+    then
+        if [ ! -e $(dirname "${OLIGIA_CODE:?}") ]
+        then
+            mkdir -p $(dirname "${OLIGIA_CODE:?}")
+        fi
+        pushd $(dirname "${OLIGIA_CODE:?}")
+            git clone "${OLIGIA_REPO:?}" $(basename "${OLIGIA_CODE:?}")
+        popd
+    else
+        pushd "${OLIGIA_CODE:?}"
+            git pull
+        popd
+    fi
+
+
+    source "${HOME:?}/taenaris.env"
+    if [ ! -e "${TAENARIS_CODE:?}" ]
+    then
+        if [ ! -e $(dirname "${TAENARIS_CODE:?}") ]
+        then
+            mkdir -p $(dirname "${TAENARIS_CODE:?}")
+        fi
+        pushd $(dirname "${TAENARIS_CODE:?}")
+            git clone "${TAENARIS_REPO:?}" $(basename "${TAENARIS_CODE:?}")
+        popd
+    else
+        pushd "${TAENARIS_CODE:?}"
+            git pull
+        popd
+    fi
+
+
+# -----------------------------------------------------
+# Run the ivoa-desktop container.
+#[user@desktop]
+
+    source "${HOME:?}/oligia.env"
+    source "${HOME:?}/taenaris.env"
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --env 'TZ=Europe/London' \
+        --publish 3000:3000 \
+        --volume "${OLIGIA_CODE:?}:/oligia:rw,z" \
+        --volume "${TAENARIS_CODE:?}:/taenaris:rw,z" \
+        ghcr.io/linuxserver/webtop:ubuntu-mate
+
+
+    firefox --new-window 'http://localhost:3000/'
+
+        Run a terminal in the new desktop.
+
+
+--------------------------------
+
+    lsb_release -a
+
+    >   No LSB modules are available.
+    >   Distributor ID:	Ubuntu
+    >   Description:	Ubuntu 20.04.2 LTS
+    >   Release:	20.04
+    >   Codename:	focal
+
+--------------------------------
+
+    sudo apt update
+    #sudo apt upgrade
+
+
+--------------------------------
+
+    #
+    # Install Java
+
+    sudo apt install default-jre
+    java --version
+
+    >   openjdk 11.0.11 2021-04-20
+    >   OpenJDK Runtime Environment (build 11.0.11+9-Ubuntu-0ubuntu2.20.04)
+    >   OpenJDK 64-Bit Server VM (build 11.0.11+9-Ubuntu-0ubuntu2.20.04, mixed mode, sharing)
+
+    sudo apt install python3
+
+    >   Reading package lists... Done
+    >   Building dependency tree
+    >   Reading state information... Done
+    >   python3 is already the newest version (3.8.2-0ubuntu2).
+    >   0 upgraded, 0 newly installed, 0 to remove and 75 not upgraded.
+
+--------------------------------
+
+    #
+    # "We recommend to use the Astropy Version of your Distribution (under Linux)"
+
+    apt search astropy
+
+    >   ....
+    >   python3-astropy/focal 4.0-4ubuntu1 amd64
+    >     Core functionality for performing astrophysics with Python
+    >   ....
+
+
+    sudo apt install -y python3-astropy
+
+    >   Reading package lists... Done
+    >   Building dependency tree
+    >   ....
+    >   ....
+    >   Setting up python3-pytest-astropy (0.7.0-1) ...
+    >   Setting up python3-astropy (4.0-4ubuntu1) ...
+
+
+    apt search pyvo
+
+    >   ....
+    >   python3-pyvo/focal 1.0-1 all
+    >     Python 3 library for data services of the Virtual observatory (VO)
+    >   ....
+
+
+    sudo apt install -y python3-pyvo
+
+    >   Reading package lists... Done
+    >   Building dependency tree
+    >   ....
+    >   ....
+    >   Setting up python3-mimeparse (1.6.0-3build1) ...
+    >   Setting up python3-pyvo (1.0-1) ...
+
+
+--------------------------------
+
+    #
+    # Alternative - use pip
+    # https://docs.astropy.org/en/stable/install.html
+
+    #
+    # Alternative - use Anaconda
+    # https://www.anaconda.com/products/individual
+
+--------------------------------
+
+    #
+    # Install TopCat
+    # http://www.star.bris.ac.uk/~mbt/topcat
+
+    sudo apt install -y wget
+
+    mkdir "${HOME}/Topcat"
+    pushd "${HOME}/Topcat"
+        wget http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jar
+        wget https://github.com/Zarquan/jordanita/raw/main/logos/Topcat/Topcat-logo.png
+    popd
+
+    cat > "${HOME}/Desktop/TopCat.desktop" << EOF
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=${HOME}/Topcat/Topcat-logo.png
+Icon[C]=mate-panel-launcher
+Name[C]=TopCat
+Exec=java -jar ${HOME}/Topcat/topcat-full.jar
+Name=TopCat
+EOF
+
+    chmod a+x "${HOME}/Desktop/TopCat.desktop"
+
+--------------------------------
+
+    #
+    # Install Aladin
+    # https://aladin.u-strasbg.fr/
+
+
+    wget https://aladin.u-strasbg.fr/java/Aladin.tar
+    tar -xvf Aladin.tar
+    rm Aladin.tar
+
+    pushd Aladin
+        wget https://github.com/Zarquan/jordanita/raw/main/logos/Aladin/Aladin.gif
+    popd
+
+    cat > "${HOME}/Desktop/Aladin.desktop" << EOF
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=${HOME}/Aladin/Aladin.gif
+Icon[C]=mate-panel-launcher
+Name[C]=Aladin
+Exec=${HOME}/Aladin/Aladin
+Name=TopCat
+EOF
+
+    chmod a+x "${HOME}/Desktop/Aladin.desktop"
+
+    todo - convert to png
+
+--------------------------------
+
+    #
+    # Get a copy of the tutorial
+
+    sudo apt install -y git
+    git clone https://github.com/Zarquan/taenaris.git
+
+
+--------------------------------
+# Start the tutorial ...
+
+    pushd taenaris
+
+        python3 astron_samp_handler.py
+
+    >   Downloading https://hpiers.obspm.fr/iers/bul/bulc/Leap_Second.dat
+    >   |==========================================| 1.3k/1.3k (100.00%)         0s
+    >   WARNING: CacheMissingWarning: ('Cache directory appears to be read-only, unable to import downloaded file, providing data in temporary file /tmp/astropy-download-6137-8ew88s5n instead.', '/tmp/astropy-download-6137-8ew88s5n') [astropy.utils.data]
+    >   To stop, enter (s):
+    >   To stop, enter (s): s
+
+
+        python3 astron_samp_handler.py
+
+    >   Downloading https://hpiers.obspm.fr/iers/bul/bulc/Leap_Second.dat
+    >   |==========================================| 1.3k/1.3k (100.00%)         0s
+    >   To stop, enter (s):
+    >   To stop, enter (s): s
+
+        vi astron_samp_handler.py
+
+            # Disable aggressive use of cahe locking
+            # https://github.com/astropy/astropy/issues/10003
+            from astropy.utils.iers import conf
+            conf.auto_download = False
+
+
+        python3 astron_samp_handler.py
+
+    >   To stop, enter (s):
+
+
+
