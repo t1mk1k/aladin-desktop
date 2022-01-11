@@ -1,0 +1,77 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+
+FROM ghcr.io/linuxserver/webtop:ubuntu-mate
+
+ARG buildtag
+ARG buildtime
+
+LABEL buildtag="${buildtag}"
+LABEL buildtime="${buildtime}"
+
+LABEL maintainer="Dave Morris <docker-admin@metagrid.co.uk>"
+LABEL gitrepo="https://github.com/Zarquan/Oligia"
+
+ENV IVOA_HOME=/opt/ivoa
+EVN DEBIAN_FRONTEND=noninteractive
+
+#
+# Install admin tools.
+RUN apt-get update && apt-get install -y wget
+
+#
+# Install Python3, PyVO and AstroPy components.
+RUN apt-get update && apt-get install -y python3
+RUN apt-get update && apt-get install -y python3-pyvo
+RUN apt-get update && apt-get install -y python3-astropy
+
+#
+# Install the Java runtime.
+RUN apt-get update && apt-get install -y default-jre
+
+#
+# Install TopCat
+RUN mkdir --parents ${IVOA_HOME}/topcat
+RUN wget --directory-prefix ${IVOA_HOME}/topcat "http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jar"
+COPY opt/ivoa/topcat/* ${IVOA_HOME}/topcat
+RUN chmod a+x ${IVOA_HOME}/topcat/topcat
+
+#
+# Install Aladin
+RUN mkdir --parents ${IVOA_HOME}/aladin
+RUN wget --directory-prefix /tmp "https://aladin.u-strasbg.fr/java/Aladin.tar"
+RUN tar --extract --directory ${IVOA_HOME}/aladin --strip-components 1 --file /tmp/Aladin.tar
+RUN rm /tmp/Aladin.tar
+COPY opt/ivoa/aladin/* ${IVOA_HOME}/aladin
+RUN ln ${IVOA_HOME}/aladin/Aladin ${IVOA_HOME}/aladin/aladin
+RUN chmod a+x ${IVOA_HOME}/aladin/aladin
+
+#
+# Install our desktop tools
+RUN mkdir --parents ${IVOA_HOME}/desktop
+COPY opt/ivoa/desktop/* ${IVOA_HOME}/desktop
+RUN chmod a+x ${IVOA_HOME}/desktop/*.desktop
+
+#
+# Install git.
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y git
+
+
