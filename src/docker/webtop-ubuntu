@@ -70,6 +70,11 @@ RUN mkdir --parents ${IVOA_HOME}/desktop
 COPY opt/ivoa/desktop/* ${IVOA_HOME}/desktop
 RUN chmod a+x ${IVOA_HOME}/desktop/*.desktop
 
+# Install our desktop config
+RUN mkdir --parents ${IVOA_HOME}/oligia
+COPY opt/ivoa/oligia/* ${IVOA_HOME}/oligia
+RUN chmod a+x ${IVOA_HOME}/oligia/*.sh
+
 #
 # Install git.
 RUN apt-get update && apt-get install -y git

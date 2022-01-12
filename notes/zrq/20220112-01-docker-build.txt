@@ -53,18 +53,25 @@
 
 
 # -----------------------------------------------------
+# Get the local timezone.
+# https://superuser.com/questions/309034/how-to-check-which-timezone-in-linux/1334239
+# https://superuser.com/a/1622614
+#[user@desktop]
+
+    timezone=$(timedatectl show --property Timezone --value)
+
+
+# -----------------------------------------------------
 # Run the ivoa-desktop container.
 #[user@desktop]
 
-    source "${HOME:?}/oligia.env"
     source "${HOME:?}/taenaris.env"
     podman run \
         --rm \
         --tty \
         --interactive \
-        --env 'TZ=Europe/London' \
+        --env "TZ=${timezone:?}" \
         --publish 3000:3000 \
-        --volume "${OLIGIA_CODE:?}:/oligia:rw,z" \
         --volume "${TAENARIS_CODE:?}:/taenaris:rw,z" \
         oligia/webtop-ubuntu:${buildtag:?}
 
@@ -82,7 +89,7 @@
 # Run a terminal and configure our desktop
 #[user@webtop]
 
-    source /oligia/src/bin/config.sh
+    source /opt/ivoa/oligia/config.sh
 
 
 # -----------------------------------------------------
