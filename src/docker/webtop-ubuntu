@@ -19,7 +19,7 @@
 # </meta:header>
 #
 
-FROM ghcr.io/linuxserver/webtop:ubuntu-mate
+FROM ghcr.io/linuxserver/webtop:ubuntu-mate-version-92cb4784
 
 ARG buildtag
 ARG buildtime
@@ -31,7 +31,7 @@ LABEL maintainer="Dave Morris <docker-admin@metagrid.co.uk>"
 LABEL gitrepo="https://github.com/Zarquan/Oligia"
 
 ENV IVOA_HOME=/opt/ivoa
-EVN DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 #
 # Install admin tools.
@@ -72,6 +72,6 @@ RUN chmod a+x ${IVOA_HOME}/desktop/*.desktop
 
 #
 # Install git.
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git
 
 
