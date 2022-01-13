@@ -28,11 +28,12 @@
 
     Target:
 
-        Build and publish the container image.
+        Build and publish the container image using Podman.
 
     Result:
 
-        Work in progress ...
+        Success.
+        Container image builds and runs.
 
 
 # -----------------------------------------------------
