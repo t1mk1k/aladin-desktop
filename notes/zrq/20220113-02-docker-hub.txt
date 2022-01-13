@@ -239,6 +239,7 @@
 
     #
     # Success, uploaded image is visible here:
+    # https://hub.docker.com/r/ivoa/oligia-webtop
     # https://hub.docker.com/repository/docker/ivoa/oligia-webtop
     # https://hub.docker.com/layers/ivoa/oligia-webtop/ubuntu-2022.01.13/images/sha256-6b9ceaee906dd9a0c34601557c24130a67d7bf0e4f81da468e574a42085e7b53
 
