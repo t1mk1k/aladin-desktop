@@ -1,0 +1,281 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Target:
+
+        Build the image using Docker and publish it on DockerHub.
+
+    Result:
+
+        Success.
+        Image built OK
+        Image uploaded OK
+        Image downloaded OK
+
+# -----------------------------------------------------
+# Check the Podman images
+#[user@desktop]
+
+    podman images
+
+    >   REPOSITORY                                                       TAG                           IMAGE ID      CREATED       SIZE
+    >   localhost/oligia/webtop-ubuntu                                   2022.01.12                    faaa9f7233cf  9 hours ago   2.83 GB
+    >   localhost/oligia/webtop-ubuntu                                   latest                        faaa9f7233cf  9 hours ago   2.83 GB
+    >   ....
+    >   ....
+
+
+# -----------------------------------------------------
+# Login and post the Podman image to DockerHub.
+#[user@desktop]
+
+    buildtag=2022.01.12
+
+    buildah login \
+        --username $(secret docker.io.user) \
+        --password $(secret docker.io.pass) \
+        registry-1.docker.io
+
+    buildah push "oligia/webtop-ubuntu:${buildtag:?}"
+
+    >   Getting image source signatures
+    >   error copying layers and metadata
+    >   from "
+    >       containers-storage:[
+    >           overlay@/home/Zarquan/.local/share/containers/storage+/run/user/1000/containers:
+    >           overlay.mount_program=/usr/bin/fuse-overlayfs,
+    >           overlay.mount_program=/usr/bin/fuse-overlayfs
+    >           ]
+    >       localhost/oligia/webtop-ubuntu:2022.01.12
+    >       "
+    >   to  "
+    >       docker://oligia/webtop-ubuntu:2022.01.12
+    >       "
+    >       :
+    >       Error trying to reuse blob sha256:b19a2ece670870ee166e735eff6375d8432ba5133c2298139db75a9a28e7f751 at destination
+    >       :
+    >       Error checking whether a blob sha256:b19a2ece670870ee166e735eff6375d8432ba5133c2298139db75a9a28e7f751 exists in docker.io/oligia/webtop-ubuntu
+    >       :
+    >       errors:
+    >           denied:
+    >               requested access to the resource is denied
+    >               error parsing HTTP 401 response body
+    >               :
+    >               unexpected end of JSON input: ""
+    >
+    >       ERRO exit status 125
+
+    #
+    # Possible conflict because we have built using both Podman and Docker ?
+    #
+
+    #
+    # Possibly because, by default, Podman builds OCI containers rather than Docker containers ?
+    # --format docker
+    #
+
+
+# -----------------------------------------------------
+# Delete local caches for both Podman and Docker.
+#[user@desktop]
+
+    docker rmi -f $(docker images -aq)
+
+    >   ....
+    >   ....
+
+
+    podman rmi -f $(podman images -aq)
+
+    >   ....
+    >   ....
+
+
+# -----------------------------------------------------
+# Build the ivoa-desktop container using Podman (--format docker).
+#[user@desktop]
+
+    buildtag=$(date '+%Y.%m.%d')
+    buildtime=$(date '+%Y-%m-%dT%H:%M:%S')
+
+    source "${HOME:?}/oligia.env"
+    podman build \
+        --format docker \
+        --build-arg "buildtag=${buildtag:?}" \
+        --build-arg "buildtime=${buildtime:?}" \
+        --tag oligia/webtop-ubuntu:latest \
+        --tag oligia/webtop-ubuntu:${buildtag:?} \
+        --file "${OLIGIA_CODE:?}/src/docker/webtop-ubuntu" \
+        "${OLIGIA_CODE:?}/src/docker"
+
+    >   ....
+    >   ....
+    >   STEP 33: COMMIT oligia/webtop-ubuntu:latest
+    >   --> 4de66193ea7
+    >   4de66193ea7a1bcab7f340a56a085fcddde23c9238a3562b12460fbdb78c6e75
+
+
+# -----------------------------------------------------
+# Post the Podman image to DockerHub.
+#[user@desktop]
+
+    buildah login \
+        --username $(secret docker.io.user) \
+        --password $(secret docker.io.pass) \
+        registry-1.docker.io
+
+    buildah push "oligia/webtop-ubuntu:${buildtag:?}"
+
+    >   ....
+    >   ....
+    >   Getting image source signatures
+    >   error copying layers and metadata
+    >       from
+    >           "
+    >           containers-storage:[
+    >               overlay@/home/Zarquan/.local/share/containers/storage+/run/user/1000/containers:
+    >                   overlay.mount_program=/usr/bin/fuse-overlayfs,
+    >                   overlay.mount_program=/usr/bin/fuse-overlayfs
+    >                   ]
+    >           localhost/oligia/webtop-ubuntu:2022.01.13
+    >           "
+    >       to  "
+    >           docker://oligia/webtop-ubuntu:2022.01.13
+    >           "
+    >       :
+    >       Error trying to reuse blob sha256:b19a2ece670870ee166e735eff6375d8432ba5133c2298139db75a9a28e7f751 at destination
+    >       :
+    >       Error checking whether a blob sha256:b19a2ece670870ee166e735eff6375d8432ba5133c2298139db75a9a28e7f751 exists in docker.io/oligia/webtop-ubuntu
+    >       :
+    >       errors:
+    >           denied: requested access to the resource is denied
+    >           error parsing HTTP 401 response body
+    >           :
+    >           unexpected end of JSON input: ""
+    >
+    >   ERRO exit status 125
+
+    #
+    # Is this me being dumb ?
+    # This a 404 eror because oligia isn't registered as a repository in DockerHub!
+    # OK, dumb.
+    # Created the destination repository.
+    # https://hub.docker.com/repository/docker/ivoa/oligia-webtop
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Build the ivoa-desktop container using Docker.
+#[user@desktop]
+
+    * Change the tag to match the DockerHub package name.
+    * ivoa/oligia-webtop:ubuntu-{version}
+
+    buildtag=$(date '+%Y.%m.%d')
+    buildtime=$(date '+%Y-%m-%dT%H:%M:%S')
+
+    source "${HOME:?}/oligia.env"
+    docker build \
+        --build-arg "buildtag=${buildtag:?}" \
+        --build-arg "buildtime=${buildtime:?}" \
+        --tag "ivoa/oligia-webtop:ubuntu-latest" \
+        --tag "ivoa/oligia-webtop:ubuntu-${buildtag:?}" \
+        --file "${OLIGIA_CODE:?}/src/docker/webtop-ubuntu" \
+        "${OLIGIA_CODE:?}/src/docker"
+
+    >   ....
+    >   ....
+    >   Successfully built 3969b316b2ea
+    >   Successfully tagged ivoa/oligia-webtop:ubuntu-latest
+    >   Successfully tagged ivoa/oligia-webtop:ubuntu-2022.01.13
+
+
+# -----------------------------------------------------
+# Login and post the image to DockerHub.
+#[user@desktop]
+
+    docker login \
+        --username $(secret docker.io.user) \
+        --password $(secret docker.io.pass) \
+        docker.io
+
+    docker push \
+        "ivoa/oligia-webtop:ubuntu-${buildtag:?}"
+
+    >   The push refers to repository [docker.io/ivoa/oligia-webtop]
+    >   9fc49e321e95: Pushed
+    >   d99cc3ee908d: Pushed
+    >   ....
+    >   ....
+    >   5b1e4e726c2d: Pushed
+    >   b19a2ece6708: Pushed
+    >   ubuntu-2022.01.13: digest: sha256:6b9ceaee906dd9a0c34601557c24130a67d7bf0e4f81da468e574a42085e7b53 size: 8277
+
+    #
+    # Success, uploaded image is visible here:
+    # https://hub.docker.com/repository/docker/ivoa/oligia-webtop
+    # https://hub.docker.com/layers/ivoa/oligia-webtop/ubuntu-2022.01.13/images/sha256-6b9ceaee906dd9a0c34601557c24130a67d7bf0e4f81da468e574a42085e7b53
+
+
+# -----------------------------------------------------
+# Delete the local cache.
+#[user@desktop]
+
+    docker rmi -f $(docker images -aq)
+
+
+# -----------------------------------------------------
+# Download and run the container from DockerHub.
+#[user@desktop]
+
+    docker run \
+        --rm \
+        --tty \
+        --interactive \
+        --publish 3000:3000 \
+        "docker.io/ivoa/oligia-webtop:ubuntu-${buildtag:?}"
+
+    >   ....
+    >   ....
+    >   Starting guacamole-lite websocket server
+    >   listening on *:3000
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Connect to the virtual desktop.
+#[user@desktop]
+
+    firefox --new-window 'http://localhost:3000/'
+
+
+
+
+
+

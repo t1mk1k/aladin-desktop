@@ -33,7 +33,8 @@
 
     Result:
 
-        Work in progress.
+        Success.
+        Container image builds and runs.
 
 
 # -----------------------------------------------------

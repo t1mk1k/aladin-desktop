@@ -1,0 +1,219 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Target:
+
+        Build the image using Podman and publish it on GitHub.
+
+    Result:
+
+        Success.
+        Image built OK
+        Image uploaded OK
+        Image downloaded OK
+
+
+# -----------------------------------------------------
+# Create a personal access token to upload images to GitHub registry.
+
+    https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry
+    https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#configuring-access-to-container-images-for-an-organization
+
+    ssh data
+        vi secrets
+            ghcr.io.user=Zarquan
+            ghcr.io.pass=.......
+
+
+# -----------------------------------------------------
+# Delete the local cache.
+#[user@desktop]
+
+    podman rmi -f $(podman images -aq)
+
+    >   ....
+    >   ....
+
+
+# -----------------------------------------------------
+# Build the ivoa-desktop container using Podman (--format oci).
+#[user@desktop]
+
+    * Change the tag to match the GitHub package name.
+    * ivoa/oligia-webtop:ubuntu-{version}
+
+    buildtag=$(date '+%Y.%m.%d')
+    buildtime=$(date '+%Y-%m-%dT%H:%M:%S')
+
+    source "${HOME:?}/oligia.env"
+    podman build \
+        --format oci \
+        --build-arg "buildtag=${buildtag:?}" \
+        --build-arg "buildtime=${buildtime:?}" \
+        --tag "ivoa/oligia-webtop:ubuntu-latest" \
+        --tag "ivoa/oligia-webtop:ubuntu-${buildtag:?}" \
+        --file "${OLIGIA_CODE:?}/src/docker/webtop-ubuntu" \
+        "${OLIGIA_CODE:?}/src/docker"
+
+    >   ....
+    >   ....
+    >   STEP 33: COMMIT ivoa/oligia-webtop:ubuntu-latest
+    >   --> 6a11dd4e1eb
+    >   6a11dd4e1eb0a721e21e633b9644db393d95451317417abe7042fba9658dbfbd
+
+
+# -----------------------------------------------------
+# List the Podman images.
+#[user@desktop]
+
+    podman images
+
+    >   REPOSITORY                    TAG                           IMAGE ID      CREATED        SIZE
+    >   localhost/ivoa/oligia-webtop  ubuntu-latest                 6a11dd4e1eb0  2 minutes ago  2.83 GB
+    >   localhost/ivoa/oligia-webtop  ubuntu-2022.01.13             6a11dd4e1eb0  2 minutes ago  2.83 GB
+    >   ghcr.io/linuxserver/webtop    ubuntu-mate-version-92cb4784  34b16e725a9b  3 days ago     2.2 GB
+
+
+# -----------------------------------------------------
+# Post the image to GitHub.
+#[user@desktop]
+
+    podman login \
+        --username $(secret ghcr.io.user) \
+        --password $(secret ghcr.io.pass) \
+        ghcr.io
+
+    >   Login Succeeded!
+
+
+    podman push \
+        "ivoa/oligia-webtop:ubuntu-${buildtag:?}" \
+
+
+    >   Getting image source signatures
+    >   Copying blob 724a9f5b7837 done
+    >   Copying blob 724a9f5b7837 done
+    >   ....
+    >   ....
+    >   Copying config 1706840b48 done
+    >   Writing manifest to image destination
+    >   Storing signatures
+
+
+    >   Getting image source signatures
+    >   Copying blob 5b1e4e726c2d skipped: already exists
+    >   Copying blob 724a9f5b7837 skipped: already exists
+    >   ....
+    >   ....
+    >   Copying blob 8a14cda77b54 done
+    >   Copying config 6a11dd4e1e done
+    >   Writing manifest to image destination
+    >   Storing signatures
+
+
+    #
+    # OK, done, but I can't see it.
+    # ...
+
+# -----------------------------------------------------
+# Post the image to GitHub.
+#[user@desktop]
+
+    podman login \
+        --username $(secret ghcr.io.user) \
+        --password $(secret ghcr.io.pass) \
+        ghcr.io
+
+    >   Login Succeeded!
+
+
+    podman push \
+        "ivoa/oligia-webtop:ubuntu-${buildtag:?}" \
+        "docker://ghcr.io/ivoa/oligia-webtop:ubuntu-${buildtag:?}"
+
+    >   ....
+    >   ....
+    >   Copying blob 8a14cda77b54 done
+    >   Copying config 6a11dd4e1e done
+    >   Writing manifest to image destination
+    >   Storing signatures
+
+    #
+    # We need to specify the fully qualified destination.
+    # No idea where it goes if we don't.
+    #
+    # Image is now visible on the ivoa packages page.
+    # https://github.com/orgs/ivoa/packages
+    # https://github.com/orgs/ivoa/packages/container/package/oligia-webtop
+    #
+    # Manual steps:
+    #   make the package public
+    #   set write access to ivoa developers
+    #   link the package to the project
+    #
+
+
+# -----------------------------------------------------
+# Delete the local cache.
+#[user@desktop]
+
+    podman rmi -f $(podman images -aq)
+
+    >   ....
+    >   ....
+
+
+# -----------------------------------------------------
+# Download and run the container from GitHub.
+#[user@desktop]
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --publish 3000:3000 \
+        "docker://ghcr.io/ivoa/oligia-webtop:ubuntu-${buildtag:?}"
+
+
+    >   ....
+    >   ....
+    >   Starting guacamole-lite websocket server
+    >   listening on *:3000
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Connect to the virtual desktop.
+#[user@desktop]
+
+    firefox --new-window 'http://localhost:3000/'
+
+
+
