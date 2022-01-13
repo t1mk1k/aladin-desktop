@@ -1,0 +1,98 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-indent
+#
+
+    Target:
+
+        Transfer the GitHub repoistory from my personal area to the IVOA organization.
+        Based on notes from transferring the IVOA-ExecPlanner project
+        https://github.com/Zarquan/lucia/blob/main/notes/zrq/20211111-01-IVOA-EP-project-transfer.txt
+
+    Result:
+
+
+# -----------------------------------------------------
+
+    Source:
+    https://github.com/Zarquan/Oligia
+
+    Howto:
+    https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository
+
+
+    Settings
+        Transfer
+            new owner : ivoa
+            confirm name : Zarquan/Oligia
+
+    Arrived:
+    https://github.com/ivoa/Oligia
+
+
+# -----------------------------------------------------
+# Update the remote URL for our local copy.
+#[user@desktop]
+
+    source "${HOME:?}/oligia.env"
+    pushd  "${OLIGIA_CODE:?}"
+
+        # Check the existing URL.
+        git remote -v
+
+    >   origin    git@github.com:Zarquan/oligia.git (fetch)
+    >   origin    git@github.com:Zarquan/oligia.git (push)
+
+
+        # Update the URL.
+        git remote set-url origin git@github.com:ivoa/oligia.git
+
+        # Check the result.
+        git remote -v
+
+    >   origin    git@github.com:ivoa/oligia.git (fetch)
+    >   origin    git@github.com:ivoa/oligia.git (push)
+
+
+        # Try pulling from the new origin.
+        git pull
+
+    >   From github.com:ivoa/oligia
+    >    * [new branch]      main       -> origin/main
+    >   There is no tracking information for the current branch.
+    >   Please specify which branch you want to merge with.
+    >   See git-pull(1) for details.
+
+
+        # Update the branch tracking information
+        git branch --set-upstream-to=origin/main main
+
+    >   Branch 'main' set up to track remote branch 'main' from 'origin'.
+
+
+        # Pull changes from the new origin
+        git pull
+
+    >   Already up to date.
+
+
+
+

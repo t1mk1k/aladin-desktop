@@ -1,0 +1,147 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Target:
+
+        Build and publish the container image using Docker.
+
+    Result:
+
+        Success.
+        Container image builds and runs.
+
+
+# -----------------------------------------------------
+# Build the ivoa-desktop container.
+#[user@desktop]
+
+    buildtag=$(date '+%Y.%m.%d')
+    buildtime=$(date '+%Y-%m-%dT%H:%M:%S')
+
+    source "${HOME:?}/oligia.env"
+    docker build \
+        --build-arg "buildtag=${buildtag:?}" \
+        --build-arg "buildtime=${buildtime:?}" \
+        --tag oligia/webtop-ubuntu:latest \
+        --tag oligia/webtop-ubuntu:${buildtag:?} \
+        --file "${OLIGIA_CODE:?}/src/docker/webtop-ubuntu" \
+        "${OLIGIA_CODE:?}/src/docker"
+
+    >   Removing intermediate container d811daa14375
+    >    ---> 19c2e9a43343
+    >   Step 17/32 : COPY opt/ivoa/topcat/* ${IVOA_HOME}/topcat
+    >   When using COPY with more than one source file, the destination must be a directory and end with a /
+
+    #
+    # Very interesting.
+    # Same source code, Podman builds with no problems,
+    # Docker rejects it with an error.
+    #
+
+    #
+    # Fix the Dockerfile to add '/' at the end of directory paths.
+    #
+
+
+# -----------------------------------------------------
+# Build the ivoa-desktop container.
+#[user@desktop]
+
+    buildtag=$(date '+%Y.%m.%d')
+    buildtime=$(date '+%Y-%m-%dT%H:%M:%S')
+
+    source "${HOME:?}/oligia.env"
+    docker build \
+        --build-arg "buildtag=${buildtag:?}" \
+        --build-arg "buildtime=${buildtime:?}" \
+        --tag oligia/webtop-ubuntu:latest \
+        --tag oligia/webtop-ubuntu:${buildtag:?} \
+        --file "${OLIGIA_CODE:?}/src/docker/webtop-ubuntu" \
+        "${OLIGIA_CODE:?}/src/docker"
+
+    >   ....
+    >   ....
+    >   Successfully built 8752bccff2dc
+    >   Successfully tagged oligia/webtop-ubuntu:latest
+    >   Successfully tagged oligia/webtop-ubuntu:2022.01.13
+
+
+
+# -----------------------------------------------------
+# Get the local timezone.
+# https://superuser.com/questions/309034/how-to-check-which-timezone-in-linux/1334239
+# https://superuser.com/a/1622614
+#[user@desktop]
+
+    timezone=$(timedatectl show --property Timezone --value)
+
+
+# -----------------------------------------------------
+# Run the ivoa-desktop container.
+#[user@desktop]
+
+    source "${HOME:?}/taenaris.env"
+    docker run \
+        --rm \
+        --tty \
+        --interactive \
+        --env "TZ=${timezone:?}" \
+        --publish 3000:3000 \
+        --volume "${TAENARIS_CODE:?}:/taenaris:rw,z" \
+        oligia/webtop-ubuntu:${buildtag:?}
+
+
+    >   ....
+    >   Starting guacamole-lite websocket server
+    >   listening on *:3000
+    >   ....
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Connect to the virtual desktop.
+#[user@desktop]
+
+    firefox --new-window 'http://localhost:3000/'
+
+
+# -----------------------------------------------------
+# -----------------------------------------------------
+# Run a terminal and configure our desktop
+#[user@webtop]
+
+    source /opt/ivoa/oligia/config.sh
+
+
+# -----------------------------------------------------
+# TODO add the training demo
+#[user@desktop]
+
+
+
+

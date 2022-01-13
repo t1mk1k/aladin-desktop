@@ -19,7 +19,7 @@
 # </meta:header>
 #
 
-FROM ghcr.io/linuxserver/webtop:ubuntu-mate
+FROM ghcr.io/linuxserver/webtop:ubuntu-mate-version-92cb4784
 
 ARG buildtag
 ARG buildtime
@@ -31,7 +31,7 @@ LABEL maintainer="Dave Morris <docker-admin@metagrid.co.uk>"
 LABEL gitrepo="https://github.com/Zarquan/Oligia"
 
 ENV IVOA_HOME=/opt/ivoa
-EVN DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 #
 # Install admin tools.
@@ -51,7 +51,7 @@ RUN apt-get update && apt-get install -y default-jre
 # Install TopCat
 RUN mkdir --parents ${IVOA_HOME}/topcat
 RUN wget --directory-prefix ${IVOA_HOME}/topcat "http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jar"
-COPY opt/ivoa/topcat/* ${IVOA_HOME}/topcat
+COPY opt/ivoa/topcat/* ${IVOA_HOME}/topcat/
 RUN chmod a+x ${IVOA_HOME}/topcat/topcat
 
 #
@@ -60,18 +60,23 @@ RUN mkdir --parents ${IVOA_HOME}/aladin
 RUN wget --directory-prefix /tmp "https://aladin.u-strasbg.fr/java/Aladin.tar"
 RUN tar --extract --directory ${IVOA_HOME}/aladin --strip-components 1 --file /tmp/Aladin.tar
 RUN rm /tmp/Aladin.tar
-COPY opt/ivoa/aladin/* ${IVOA_HOME}/aladin
+COPY opt/ivoa/aladin/* ${IVOA_HOME}/aladin/
 RUN ln ${IVOA_HOME}/aladin/Aladin ${IVOA_HOME}/aladin/aladin
 RUN chmod a+x ${IVOA_HOME}/aladin/aladin
 
 #
 # Install our desktop tools
 RUN mkdir --parents ${IVOA_HOME}/desktop
-COPY opt/ivoa/desktop/* ${IVOA_HOME}/desktop
+COPY opt/ivoa/desktop/* ${IVOA_HOME}/desktop/
 RUN chmod a+x ${IVOA_HOME}/desktop/*.desktop
+
+# Install our desktop config
+RUN mkdir --parents ${IVOA_HOME}/oligia
+COPY opt/ivoa/oligia/* ${IVOA_HOME}/oligia/
+RUN chmod a+x ${IVOA_HOME}/oligia/*.sh
 
 #
 # Install git.
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git
 
 
