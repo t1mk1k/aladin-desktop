@@ -58,7 +58,7 @@ RUN apt-get update && apt-get install -y wget
 # Install Aladin
 RUN mkdir --parents ${IVOA_HOME}/aladin
 RUN wget --directory-prefix /tmp "https://aladin.cds.unistra.fr/java/Aladin.tar"
-RUN tar --extract --directory /usr/bin/aladin --strip-components 1 --file /tmp/Aladin.tar
+RUN tar --extract --directory /usr/bin/ --strip-components 1 --file /tmp/Aladin.tar
 RUN rm /tmp/Aladin.tar
 # COPY opt/ivoa/aladin/* ${IVOA_HOME}/aladin/
 # RUN ln ${IVOA_HOME}/aladin/Aladin ${IVOA_HOME}/aladin/aladin
