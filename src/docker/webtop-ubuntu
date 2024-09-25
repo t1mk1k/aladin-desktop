@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y wget
 
 #
 # Install the Java runtime.
-# RUN apt-get update && apt-get install -y default-jre
+RUN apt-get update && apt-get install -y default-jre
 
 #
 # Install TopCat
